@@ -1,88 +1,52 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import "./style.css"
-
+import WeatherCard from './weatherCard';
 const Temp = () => {
+    const [searchValue, setSearchValue] = useState("Delhi");
+    const [tempInfo, setTempInfo] = useState({});
+    const getWeatherInfo = async () => {
+        try {
+            let url = ` https://api.openweathermap.org/data/2.5/weather?q=${searchValue}&units=metric&appid=faa56f509560f76d7cfac36f410a192d`
+            const res = await fetch(url);
+            const data = await res.json();
+            // console.log(data);          // Excess of all the data from where we are going to destructuring it
+            const { temp, pressure, humidity } = data.main;
+            const { main: weatherMood } = data.weather[0];  // To rename it from main to weatherMood
+            const { name } = data;
+            const { speed } = data.wind;
+            const { country, sunset } = data.sys;
+
+            const myNewWeatherInfo = {
+                temp, humidity, pressure, weatherMood, name, speed, country, sunset
+            };
+
+            setTempInfo(myNewWeatherInfo);
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    //     
+    // In order to run for the first time without refreshing the pages.
+    useEffect(() => {
+        getWeatherInfo();
+    }, []);
+
     return (
         <>
+            {/* Search in the city */}
             <div className="wrap">
                 <div className="search">
                     <input type="search"
                         placeholder='Enter Your City Name'
                         className='searchTerm'
-                        id="search" />
-                    <button className="searchButton" type="button">Search</button>
+                        id="search"
+                        value={searchValue}  /* To take input and store the data in searchValue*/
+                        onChange={(e) => setSearchValue(e.target.value)} />    {/* To take input */}
+                    <button className="searchButton" type="button" onClick={getWeatherInfo}>Search</button>
                 </div>
             </div>
-
-            <article className="widget">
-                <div className="weatherIcon">
-                    <i className='wi wi-day-sunny'></i>
-                </div>
-                <div className="weatherInfo">
-                    <div className="temperature">
-                        <span>35.4*C</span>
-                    </div>
-
-                    <div className="description">
-                        <div className="weatherCondition">SunnyGa998</div>
-                        <div className="place">Allahabad, India</div>
-                    </div>
-                </div>
-                <div className="date">{new Date().toLocaleString()}</div>
-
-                {/* 4 section for getting different datas */}
-
-                <div className="extra-temp">
-                    <div className="temp-info-minmax">
-                        <div className="two-sided-section">
-                            <p>
-                                <i className="wi wi-day-cloudy"></i>
-                            </p>
-                            <p className="extra-info-leftside">
-                                19:23pm <br />
-                                Day-Cloudy
-                            </p>
-                        </div>
-
-                        <div className="two-sided-section">
-                            <p>
-                                <i className="wi wi-day-haze"></i>
-                            </p>
-                            <p className="extra-info-leftside">
-                                09:14pm <br />
-                                Day-Haze
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div className="temp-info-minmax">
-                        <div className="two-sided-section">
-                            <p>
-                                <i className="wi wi-day-fog"></i>
-                            </p>
-                            <p className="extra-info-leftside">
-                                19:19pm <br />
-                                Day-Fog
-                            </p>
-                        </div>
-
-                        <div className="two-sided-section">
-                            <p>
-                                <i className="wi wi-day-rain"></i>
-                            </p>
-                            <p className="extra-info-leftside">
-                                11:13pm <br />
-                                Day-Rain
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-            </article>
+            <WeatherCard tempInfo={tempInfo} />
         </>
     )
 }
