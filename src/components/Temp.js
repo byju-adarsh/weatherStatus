@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import "./style.css"
 import WeatherCard from './weatherCard';
+
 const Temp = () => {
     const [searchValue, setSearchValue] = useState("Delhi");
     const [tempInfo, setTempInfo] = useState({});
@@ -44,7 +45,7 @@ const Temp = () => {
                         value={searchValue}  /* To take input and store the data in searchValue*/
                         onChange={(e) => setSearchValue(e.target.value)} />    {/* To take input */}
                     <button className="searchButton" type="button" onClick={getWeatherInfo}>Search</button>
-                </div>
+                </div> 
             </div>
             <WeatherCard tempInfo={tempInfo} />
         </>
