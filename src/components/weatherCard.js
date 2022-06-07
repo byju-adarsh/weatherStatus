@@ -94,10 +94,7 @@ const WeatherCard = ({ tempInfo }) => {
                         </div>
 
                     </div>
-
-
                 </div>
-
             </article>
         </>
     )

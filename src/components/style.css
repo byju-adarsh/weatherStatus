@@ -71,8 +71,8 @@ body {
     display: flex;
     justify-content: center;
     text-align: center;
-    margin-top: -150px;
-    margin-bottom: 50px;
+    margin-top: -50px;
+    margin-bottom: 20px;
 }
 
 /* Css in temp cards */
