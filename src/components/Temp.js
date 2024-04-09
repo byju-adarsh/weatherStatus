@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import { Alert, Input, Button } from "reactstrap"
+
+import { isEmpty } from 'lodash';
+
 import "./style.css"
 import WeatherCard from './weatherCard';
 
 const Temp = () => {
-    const [searchValue, setSearchValue] = useState("Delhi");
+    const [searchValue, setSearchValue] = useState();
     const [tempInfo, setTempInfo] = useState({});
+    const [error, setError] = useState(null);
     const getWeatherInfo = async () => {
         try {
             let url = ` https://api.openweathermap.org/data/2.5/weather?q=${searchValue}&units=metric&appid=faa56f509560f76d7cfac36f410a192d`
@@ -22,32 +27,50 @@ const Temp = () => {
             };
 
             setTempInfo(myNewWeatherInfo);
+            setError(null);
+            setSearchValue('');
 
         } catch (error) {
+            setError(`Please enter correct city name`);
+            setSearchValue('');
             console.log(error);
         }
     };
-    //     
-    // In order to run for the first time without refreshing the pages.
-    useEffect(() => {
-        getWeatherInfo();
-    }, []);
+
 
     return (
         <>
             {/* Search in the city */}
             <div className="wrap">
                 <div className="search">
-                    <input type="search"
+                    <Input type="search"
                         placeholder='Enter Your City Name'
                         className='searchTerm'
                         id="search"
                         value={searchValue}  /* To take input and store the data in searchValue*/
                         onChange={(e) => setSearchValue(e.target.value)} />    {/* To take input */}
-                    <button className="searchButton" type="button" onClick={getWeatherInfo}>Search</button>
-                </div> 
+                    <Button
+                        type="button"
+                        color='primary'
+                        onClick={getWeatherInfo}
+                    >
+                        Search
+                    </Button >
+                    {/* </button> */}
+                </div>
             </div>
-            <WeatherCard tempInfo={tempInfo} />
+            {
+                !isEmpty(error) && (<>
+                    <Alert color="danger">
+                        Hey! Please Enter correct city name.
+                    </Alert>
+                </>)
+            }
+            {!isEmpty(tempInfo) && isEmpty(error) &&
+                <WeatherCard
+                    tempInfo={tempInfo}
+                />
+            }
         </>
     )
 }

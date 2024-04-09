@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useEffect } from 'react'
 
 const WeatherCard = ({ tempInfo }) => {
@@ -44,7 +45,7 @@ const WeatherCard = ({ tempInfo }) => {
                         <div className="place">{name}, {country}</div>
                     </div>
                 </div>
-                <div className="date">{new Date().toLocaleString()}</div>
+                <div className="date">{moment(new Date().toLocaleString()).format('lll')}</div>
 
                 {/* 4 section for getting different datas */}
 
